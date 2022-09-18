@@ -1,0 +1,82 @@
+esphome:
+  name: "switch-1"
+
+esp8266:
+  board: nodemcuv2
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "VZUaiSEChLNl0YYgAj2axDPsjD8W3Jh8wUeU/3hjk/I="
+
+ota:
+  password: "e8fabdc38a13c62dcb2d7ea94f358ee3"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Switch-Lampu-Tembak"
+    password: "oX95iPPFzbaR"
+
+captive_portal:
+
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: D5
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    id: button_1
+    on_press:
+      then:
+        - light.toggle: light_1
+  - platform: gpio
+    pin:
+      number: D6
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    id: button_2
+    on_press:
+      then:
+        - light.toggle: light_2
+
+output:
+  - platform: gpio
+    pin: 
+      number: D4
+      inverted: true
+    id: relay_1
+  - platform: gpio
+    pin: 
+      number: D3
+      inverted: true
+    id: relay_2
+    
+light:
+  - platform: binary
+    name: "LED Kiri"
+    id: light_1
+    output: relay_1
+  - platform: binary
+    name: "LED Kanan"
+    id: light_2
+    output: relay_2
+    
+switch:
+  - platform: gpio
+    pin: D2
+    id: relay
+    name: "Pump"
+    icon: "mdi:pump"
+    inverted: true
